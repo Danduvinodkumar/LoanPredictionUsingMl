@@ -1,6 +1,5 @@
 import flask
 import pickle
-import pandas as pd
 import numpy as np
 
 
@@ -8,14 +7,14 @@ from sklearn.preprocessing import StandardScaler
 
 
 #load models at top of app to load into memory only one time
-with open('models/loan_application_model_lr.pickle', 'rb') as f:
+path='models/loan_application_model_lr.pickle'
+with open(path, 'rb') as f:
     clf_lr = pickle.load(f)
 
 
 # with open('models/knn_regression.pkl', 'rb') as f:
 #     knn = pickle.load(f)    
 ss = StandardScaler()
-
 
 genders_to_int = {'MALE':1,
                   'FEMALE':0}
@@ -122,16 +121,18 @@ def Loan_Application():
         pred = clf_lr.predict([x])[0]
         
         if pred==1:
-            res = '🎊🎊Congratulations! your Loan Application has been Approved!🎊🎊'
+            result_color = '#4CBB17'
+            res = '🎆🎈Congratulations! your Loan Application has been Approved!🎈🎆'
         else:
-                res = '😔😔Unfortunatly your Loan Application has been Denied😔😔'
+            result_color = 'red'
+            res = 'Sadly! your Loan Application has been Rejected😢😔😔'
         
 
  
         #render form again and add prediction
         return flask.render_template('Loan_Application.html', 
                                      original_input=output_dict,
-                                     result=res,)
+                                     result=res,result_color=result_color)
 
 
         
